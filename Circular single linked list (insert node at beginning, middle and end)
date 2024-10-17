@@ -1,0 +1,67 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct node {
+    int data;
+    struct node* next;
+};
+
+void insertNode(struct node** head, int data) {
+    struct node* newNode = (struct node*)malloc(sizeof(struct node));
+    newNode->data = data;
+    struct node* current = *head;
+
+    if (*head == NULL) {
+        newNode->next = newNode;
+        *head = newNode;
+    } else if (data <= (*head)->data) {
+        while (current->next != *head)
+            current = current->next;
+        current->next = newNode;
+        newNode->next = *head;
+        *head = newNode;
+    } else {
+        while (current->next != *head && current->next->data < data)
+            current = current->next;
+        newNode->next = current->next;
+        current->next = newNode;
+    }
+}
+
+void printList(struct node* head) {
+    if (head != NULL) {
+        struct node* temp = head;
+        do {
+            printf("%d -> ", temp->data);
+            temp = temp->next;
+        } while (temp != head);
+        printf("(head)\n");
+    }
+}
+
+int main() {
+    struct node* head = NULL;
+    int choice, data;
+
+    while (1) {
+        printf("1. Insert Node\n2. Print List\n3. Exit\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter data to insert: ");
+                scanf("%d", &data);
+                insertNode(&head, data);
+                break;
+            case 2:
+                printList(head);
+                break;
+            case 3:
+                exit(0);
+            default:
+                printf("Invalid choice! Please try again.\n");
+        }
+    }
+
+    return 0;
+}
